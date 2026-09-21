@@ -191,7 +191,7 @@ button:hover{background:#1d4ed8;}
 .pod-note{font-size:14px;color:#475569;margin:0 0 10px;}
 
 /* =========================================================
-   Function3 —— 总表格 + 筛选
+   Function3 —— 简洁 Excel 风格表格
    ========================================================= */
 .rate-toolbar{
     display:flex;
@@ -243,96 +243,6 @@ button:hover{background:#1d4ed8;}
     cursor:not-allowed;
 }
 
-/* 总价格表 */
-.rate-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13.5px;
-}
-.rate-table th,
-.rate-table td{
-    border:1px solid #e2e8f0;
-    padding:9px 10px;
-    text-align:left;
-    vertical-align:middle;
-}
-.rate-table thead th{
-    background:#eff6ff;
-    color:#1e3a8a;
-    font-weight:700;
-    font-size:13px;
-    letter-spacing:0.3px;
-    white-space:nowrap;
-    text-align:center;
-}
-.rate-table thead th.col-pol,
-.rate-table thead th.col-pod{ text-align:left; }
-
-.rate-table tbody tr:nth-child(even){background:#f8fafc;}
-.rate-table tbody tr:hover{background:#eff6ff;}
-
-.rate-table td.pol{
-    font-weight:700;
-    color:#1e293b;
-    white-space:normal;
-    word-break:break-word;
-    max-width:200px;
-}
-.rate-table td.pod{
-    color:#475569;
-    white-space:normal;
-    word-break:break-word;
-    max-width:180px;
-}
-.rate-table td.carrier{
-    text-align:center;
-    white-space:nowrap;
-}
-.rate-table td.carrier .tag{
-    display:inline-block;
-    background:#eff6ff;
-    color:#1d4ed8;
-    border-radius:4px;
-    padding:2px 10px;
-    font-size:12px;
-    font-weight:700;
-}
-.rate-table td.price{
-    text-align:center;
-    font-weight:800;
-    font-size:17px;
-    color:#1d4ed8;
-    background:#f0f9ff;
-    white-space:nowrap;
-    letter-spacing:0.3px;
-}
-.rate-table td.price::before{
-    content:"USD ";
-    font-size:11px;
-    color:#94a3b8;
-    font-weight:600;
-    margin-right:2px;
-}
-.rate-table td.freetime{
-    text-align:center;
-    white-space:nowrap;
-    color:#475569;
-}
-.rate-table td.validity{
-    text-align:center;
-    white-space:nowrap;
-    color:#b45309;
-    font-weight:600;
-}
-.rate-table td.remark{
-    font-size:12px;
-    color:#64748b;
-    line-height:1.55;
-    white-space:normal;
-    max-width:260px;
-    word-break:break-word;
-}
-
 .rate-summary{
     font-size:13px;
     color:#64748b;
@@ -340,10 +250,71 @@ button:hover{background:#1d4ed8;}
 }
 .rate-summary b{color:#1e293b;font-weight:600;}
 
+/* 简洁 Excel 风格表格 */
+.rate-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    background:#fff;
+}
+.rate-table th,
+.rate-table td{
+    border:1px solid #c8d6c4;
+    padding:10px 12px;
+    text-align:center;
+    vertical-align:middle;
+}
+.rate-table thead th{
+    background:#d9ead3;
+    color:#1e293b;
+    font-weight:700;
+    font-size:13px;
+    white-space:nowrap;
+}
+.rate-table tbody tr:nth-child(even){background:#f9fbf8;}
+.rate-table tbody tr:hover{background:#f0f7ec;}
+.rate-table td.pol{
+    font-weight:600;
+    color:#1e293b;
+    white-space:normal;
+    word-break:break-word;
+}
+.rate-table td.pod{
+    color:#334155;
+    white-space:normal;
+    word-break:break-word;
+}
+.rate-table td.carrier{
+    white-space:nowrap;
+    font-weight:600;
+    color:#1e293b;
+}
+.rate-table td.price{
+    font-weight:700;
+    color:#1e293b;
+    white-space:nowrap;
+    font-size:14px;
+}
+.rate-table td.freetime{
+    white-space:nowrap;
+    color:#334155;
+}
+.rate-table td.validity{
+    white-space:nowrap;
+    color:#334155;
+}
+.rate-table td.remark{
+    text-align:left;
+    font-size:12.5px;
+    color:#475569;
+    line-height:1.55;
+    white-space:normal;
+    word-break:break-word;
+}
+
 @media(max-width: 900px){
     .port-check-group{ grid-template-columns: repeat(4, 1fr); }
     .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
-    .rate-table td.price{ font-size:15px; }
 }
 @media(max-width: 700px){
     .local-grid{ grid-template-columns:1fr; }
@@ -1104,14 +1075,13 @@ document.getElementById('btnCopyG2').addEventListener('click', function(){
 });
 
 /* =========================================================
-   8. Function3 —— Rate Cost（默认总表格，价格突出）
+   8. Function3 —— Rate Cost（Excel 风格表格）
    ========================================================= */
 const RATE_COST_DATA = [
   { pol: "QINGDAO", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10190, price40: 10190, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
-  { pol: "SHANGHAI/NINGBO/TIANJIN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10264, price40: 10264, freeTime: "21days", validity: "9.22-10.11", remark: "" },
+  { pol: "SHANGHAI/NINGBO/TIANJIN/SHENZHEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10214, price40: 10214, freeTime: "21days", validity: "9.22-10.11", remark: "" },
   { pol: "NANSHA", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10290, price40: 10290, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
-  { pol: "XIAMEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10364, price40: 10364, freeTime: "21days", validity: "9.22-10.11", remark: "" },
-  { pol: "SHENZHEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10214, price40: 10214, freeTime: "21days", validity: "ETD9.28/10.4", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
+  { pol: "XIAMEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10314, price40: 10314, freeTime: "21days", validity: "9.22-10.11", remark: "" },
   { pol: "SHENZHEN/SHANGHAI/NINGBO/QINGDAO/TIANJIN/XIAMEN/DALIAN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "MSC", price20: 10000, price40: 10000, freeTime: "21days", validity: "9.18-10.11", remark: "INCL PCS&DTHC" },
   { pol: "QINGDAO/SHANGHAI/NINGBO", pod: "LA GUAIRA", carrier: "MSK", price20: 9500, price40: 9500, freeTime: "21days", validity: "ETD", remark: "NINGBO ETD9.29  |  SHANGHAI  ETD9.25/10.9  |  QINGDAO ETD9.27/10.11<br>LOSS SPACE USD200" },
   { pol: "SHENZHEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "ZIM", price20: 11598, price40: 13073, freeTime: "21days", validity: "9.15-9.21", remark: "OF:GUARANAO/MARACAIBO/GUANTA  USD12065/13610<br>NANSHA FEEDER FEE: +USD160/200" }
@@ -1149,14 +1119,14 @@ function renderRateCost(){
 
     html += '<div class="table-wrap">';
     html += '<table class="rate-table"><thead><tr>' +
-        '<th class="col-pol">POL</th>' +
-        '<th class="col-pod">POD</th>' +
-        '<th>Carrier</th>' +
-        '<th>20GP</th>' +
-        '<th>40HC</th>' +
-        '<th>Free Time</th>' +
-        '<th>Validity</th>' +
-        '<th>Remark</th>' +
+        '<th>POL</th>' +
+        '<th>POD</th>' +
+        '<th>CARRIER</th>' +
+        '<th>20GP (USD)</th>' +
+        '<th>40HC (USD)</th>' +
+        '<th>FREE TIME</th>' +
+        '<th>VALIDITY</th>' +
+        '<th>REMARK</th>' +
         '</tr></thead><tbody>';
 
     filtered.forEach(function(row){
@@ -1166,7 +1136,7 @@ function renderRateCost(){
         html += '<tr>';
         html += '<td class="pol">' + row.pol + '</td>';
         html += '<td class="pod">' + row.pod + '</td>';
-        html += '<td class="carrier"><span class="tag">' + row.carrier + '</span></td>';
+        html += '<td class="carrier">' + row.carrier + '</td>';
         html += '<td class="price">' + p20 + '</td>';
         html += '<td class="price">' + p40 + '</td>';
         html += '<td class="freetime">' + row.freeTime + '</td>';
