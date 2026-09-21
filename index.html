@@ -191,7 +191,7 @@ button:hover{background:#1d4ed8;}
 .pod-note{font-size:14px;color:#475569;margin:0 0 10px;}
 
 /* =========================================================
-   Function3 —— 简洁 Excel 风格表格
+   Function3 —— Excel 风格表格（桌面）
    ========================================================= */
 .rate-toolbar{
     display:flex;
@@ -250,7 +250,6 @@ button:hover{background:#1d4ed8;}
 }
 .rate-summary b{color:#1e293b;font-weight:600;}
 
-/* 简洁 Excel 风格表格 */
 .rate-table{
     width:100%;
     border-collapse:collapse;
@@ -312,12 +311,78 @@ button:hover{background:#1d4ed8;}
     word-break:break-word;
 }
 
+/* =========================================================
+   响应式
+   ========================================================= */
 @media(max-width: 900px){
     .port-check-group{ grid-template-columns: repeat(4, 1fr); }
     .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
 }
 @media(max-width: 700px){
     .local-grid{ grid-template-columns:1fr; }
+
+    /* ---------- Function3 手机端卡片布局 ---------- */
+    .rate-table{ border:none; }
+    .rate-table thead{ display:none; }
+    .rate-table tbody tr{
+        display:block;
+        border:1px solid #c8d6c4;
+        border-radius:8px;
+        margin-bottom:12px;
+        background:#fff;
+        overflow:hidden;
+    }
+    .rate-table tbody tr:nth-child(even){background:#fff;}
+    .rate-table tbody tr:hover{background:#fff;}
+
+    .rate-table td{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:10px;
+        border:none;
+        border-bottom:1px solid #f0f4ee;
+        padding:8px 12px;
+        text-align:right;
+    }
+    .rate-table td:last-child{ border-bottom:none; }
+
+    .rate-table td::before{
+        content:attr(data-label);
+        font-weight:700;
+        color:#64748b;
+        font-size:12px;
+        text-align:left;
+        flex-shrink:0;
+        padding-top:2px;
+    }
+
+    .rate-table td.pol{
+        background:#d9ead3;
+        font-size:14px;
+        font-weight:700;
+        color:#1e293b;
+        padding:10px 12px;
+    }
+    .rate-table td.pol::before{ content:"POL"; color:#1e293b; }
+
+    .rate-table td.price{
+        background:#f0f9ff;
+        font-size:17px;
+        font-weight:800;
+        color:#1d4ed8;
+        text-align:right;
+    }
+    .rate-table td.price::before{ color:#1e40af; }
+
+    .rate-table td.remark{
+        text-align:left;
+        white-space:normal;
+    }
+    .rate-table td.remark::before{
+        display:none;
+    }
+    .rate-table td.remark:empty{ display:none; }
 }
 @media(max-width: 600px){
     .port-check-group{ grid-template-columns: repeat(3, 1fr); }
@@ -367,7 +432,6 @@ button:hover{background:#1d4ed8;}
     color:#334155;
 }
 .local-fee-list li{padding:1px 0;}
-
 </style>
 </head>
 <body>
@@ -1075,7 +1139,7 @@ document.getElementById('btnCopyG2').addEventListener('click', function(){
 });
 
 /* =========================================================
-   8. Function3 —— Rate Cost（Excel 风格表格）
+   8. Function3 —— Rate Cost（Excel 风格表格 + 手机端卡片）
    ========================================================= */
 const RATE_COST_DATA = [
   { pol: "QINGDAO", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10190, price40: 10190, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
@@ -1134,13 +1198,13 @@ function renderRateCost(){
         const p40 = row.price40 - 200;
 
         html += '<tr>';
-        html += '<td class="pol">' + row.pol + '</td>';
-        html += '<td class="pod">' + row.pod + '</td>';
-        html += '<td class="carrier">' + row.carrier + '</td>';
-        html += '<td class="price">' + p20 + '</td>';
-        html += '<td class="price">' + p40 + '</td>';
-        html += '<td class="freetime">' + row.freeTime + '</td>';
-        html += '<td class="validity">' + row.validity + '</td>';
+        html += '<td class="pol" data-label="POL">' + row.pol + '</td>';
+        html += '<td class="pod" data-label="POD">' + row.pod + '</td>';
+        html += '<td class="carrier" data-label="CARRIER">' + row.carrier + '</td>';
+        html += '<td class="price" data-label="20GP (USD)">' + p20 + '</td>';
+        html += '<td class="price" data-label="40HC (USD)">' + p40 + '</td>';
+        html += '<td class="freetime" data-label="FREE TIME">' + row.freeTime + '</td>';
+        html += '<td class="validity" data-label="VALIDITY">' + row.validity + '</td>';
         html += '<td class="remark">' + (row.remark || '') + '</td>';
         html += '</tr>';
     });
