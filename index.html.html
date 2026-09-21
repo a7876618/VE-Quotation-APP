@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0">
+<title>VE Tool Framework</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+*{box-sizing:border-box;font-family:Arial, sans-serif;}
+body{max-width:1240px;margin:0 auto;padding:0;background:#f5f7fa;}
+.tab-bar{
+    position:sticky;
+    top:0;
+    background:#fff;
+    padding:12px 10px;
+    z-index:100;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+.tab-buttons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+}
+.tab-btn{
+    padding:9px 18px;
+    border:1px solid #cbd5e1;
+    background:#e2e8f0;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:15px;
+}
+.tab-btn.active{
+    background:#2563eb;
+    color:#fff;
+    border-color:#2563eb;
+}
+.panel{
+    display:none;
+}
+.panel.active{
+    display:block;
+}
+.box{background:#fff;padding:14px;border-radius:10px;box-shadow:0 1px 8px #00000014;margin:14px 10px;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+.row-single{
+    display:block;
+    margin-bottom:12px;
+}
+select,button,input{
+    padding:10px 8px;
+    font-size:15px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    min-height:44px;
+}
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    cursor:pointer;
+    min-height:44px;
+}
+button:hover{background:#1d4ed8;}
+.btn-copy{
+    background:#029e5b;
+    margin-top:6px;
+    max-width:100%;
+    padding:8px 10px;
+}
+.btn-copy:hover{background:#017d48;}
+.check-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:8px 0;
+    flex-wrap:wrap;
+}
+.check-item input[type="checkbox"]{
+    width:auto;
+    transform:scale(1.2);
+}
+.group-box{
+    border:1px solid #d8dde6;
+    border-radius:8px;
+    padding:12px;
+    margin:8px 0;
+}
+.port-check-group{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:10px 8px;
+    margin:10px 0;
+}
+.port-check-group label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+    padding:9px 8px;
+    font-size:14px;
+    white-space:nowrap;
+}
+.port-check-group input[type="checkbox"]{
+    width:16px;
+    height:16px;
+    margin:0;
+    cursor:pointer;
+}
+.carrier-check-group{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px 8px;
+    margin:10px 0;
+}
+.carrier-check-group label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+    padding:9px 8px;
+    font-size:14px;
+    white-space:nowrap;
+}
+.carrier-check-group input[type="checkbox"]{
+    width:16px;
+    height:16px;
+    margin:0;
+    cursor:pointer;
+}
+#btnSelectAllPol{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:9px 14px;
+    font-size:14px;
+    cursor:pointer;
+    min-height:auto;
+}
+#btnSelectAllPol:hover{
+    background:#1d4ed8;
+}
+
+/* ===== 船期表（桌面） ===== */
+.table-wrap{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+.sch-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+    min-width:820px;
+}
+.sch-table th,.sch-table td{
+    border:1px solid #e2e8f0;
+    padding:8px 10px;
+    text-align:left;
+    white-space:nowrap;
+}
+.sch-table th{
+    background:#f1f5f9;
+    font-weight:600;
+    color:#334155;
+}
+.sch-table tbody tr:nth-child(even){background:#f8fafc;}
+.sch-table td.blank{color:#94a3b8;}
+.etd-highlight{
+    background:#dbeafe;
+    font-weight:700;
+    color:#1e40af;
+}
+.btn-copy-single{
+    background:#029e5b;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:8px 14px;
+    font-size:13px;
+    cursor:pointer;
+    min-height:auto;
+    white-space:nowrap;
+}
+.btn-copy-single:hover{background:#017d48;}
+.hint{color:#64748b;font-size:14px;margin:6px 0;}
+.pod-note{font-size:14px;color:#475569;margin:0 0 10px;}
+
+/* =========================================================
+   Function3 —— Excel 风格表格（桌面）
+   ========================================================= */
+.rate-toolbar{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:14px;
+    padding:12px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+}
+.rate-toolbar label{
+    font-size:14px;
+    font-weight:600;
+    color:#334155;
+    margin-right:4px;
+}
+.rate-toolbar select{
+    min-width:180px;
+    min-height:40px;
+    padding:8px 10px;
+    font-size:14px;
+}
+#btnShowAllRates{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:9px 16px;
+    font-size:14px;
+    cursor:pointer;
+    min-height:40px;
+}
+#btnShowAllRates:hover{background:#1d4ed8;}
+#btnCopyRateImage{
+    background:#7c3aed;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:9px 16px;
+    font-size:14px;
+    cursor:pointer;
+    min-height:40px;
+}
+#btnCopyRateImage:hover{background:#6d28d9;}
+#btnCopyRateImage:disabled{
+    background:#94a3b8;
+    cursor:not-allowed;
+}
+
+.rate-summary{
+    font-size:13px;
+    color:#64748b;
+    margin:0 0 10px;
+}
+.rate-summary b{color:#1e293b;font-weight:600;}
+
+.rate-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    background:#fff;
+}
+.rate-table th,
+.rate-table td{
+    border:1px solid #c8d6c4;
+    padding:10px 12px;
+    text-align:center;
+    vertical-align:middle;
+}
+.rate-table thead th{
+    background:#d9ead3;
+    color:#1e293b;
+    font-weight:700;
+    font-size:13px;
+    white-space:nowrap;
+}
+.rate-table tbody tr:nth-child(even){background:#f9fbf8;}
+.rate-table tbody tr:hover{background:#f0f7ec;}
+.rate-table td.pol{
+    font-weight:600;
+    color:#1e293b;
+    white-space:normal;
+    word-break:break-word;
+}
+.rate-table td.pod{
+    color:#334155;
+    white-space:normal;
+    word-break:break-word;
+}
+.rate-table td.carrier{
+    white-space:nowrap;
+    font-weight:600;
+    color:#1e293b;
+}
+.rate-table td.price{
+    font-weight:700;
+    color:#1e293b;
+    white-space:nowrap;
+    font-size:14px;
+}
+.rate-table td.freetime{
+    white-space:nowrap;
+    color:#334155;
+}
+.rate-table td.validity{
+    white-space:nowrap;
+    color:#334155;
+}
+.rate-table td.remark{
+    text-align:left;
+    font-size:12.5px;
+    color:#475569;
+    line-height:1.55;
+    white-space:normal;
+    word-break:break-word;
+}
+
+/* =========================================================
+   响应式
+   ========================================================= */
+@media(max-width: 900px){
+    .port-check-group{ grid-template-columns: repeat(4, 1fr); }
+    .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media(max-width: 700px){
+    .local-grid{ grid-template-columns:1fr; }
+
+    /* ========== Function3 手机端卡片 ========== */
+    .rate-table{ border:none; }
+    .rate-table thead{ display:none; }
+    .rate-table tbody tr{
+        display:block;
+        border:1px solid #c8d6c4;
+        border-radius:8px;
+        margin-bottom:12px;
+        background:#fff;
+        overflow:hidden;
+    }
+    .rate-table tbody tr:nth-child(even){background:#fff;}
+    .rate-table tbody tr:hover{background:#fff;}
+    .rate-table td{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:10px;
+        border:none;
+        border-bottom:1px solid #f0f4ee;
+        padding:8px 12px;
+        text-align:right;
+    }
+    .rate-table td:last-child{ border-bottom:none; }
+    .rate-table td::before{
+        content:attr(data-label);
+        font-weight:700;
+        color:#64748b;
+        font-size:12px;
+        text-align:left;
+        flex-shrink:0;
+        padding-top:2px;
+    }
+    .rate-table td.pol{
+        background:#d9ead3;
+        font-size:14px;
+        font-weight:700;
+        color:#1e293b;
+        padding:10px 12px;
+    }
+    .rate-table td.pol::before{ content:"POL"; color:#1e293b; }
+    .rate-table td.price{
+        background:#f0f9ff;
+        font-size:17px;
+        font-weight:800;
+        color:#1d4ed8;
+        text-align:right;
+    }
+    .rate-table td.price::before{ color:#1e40af; }
+    .rate-table td.remark{
+        text-align:left;
+        white-space:normal;
+    }
+    .rate-table td.remark::before{ display:none; }
+    .rate-table td.remark:empty{ display:none; }
+
+    /* ========== Function1 手机端卡片 ========== */
+    .sch-table{ border:none; min-width:0; }
+    .sch-table thead{ display:none; }
+    .sch-table tbody tr{
+        display:block;
+        border:1px solid #cbd5e1;
+        border-radius:8px;
+        margin-bottom:12px;
+        background:#fff;
+        overflow:hidden;
+    }
+    .sch-table tbody tr:nth-child(even){background:#fff;}
+
+    .sch-table td{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:10px;
+        border:none;
+        border-bottom:1px solid #f1f5f9;
+        padding:8px 12px;
+        text-align:right;
+        white-space:normal;
+        word-break:break-word;
+    }
+    .sch-table td:last-child{ border-bottom:none; }
+
+    .sch-table td::before{
+        content:attr(data-label);
+        font-weight:700;
+        color:#64748b;
+        font-size:12px;
+        text-align:left;
+        flex-shrink:0;
+        padding-top:2px;
+    }
+
+    /* Voyage 行做成标题条 */
+    .sch-table td.voyage-cell{
+        background:#dbeafe;
+        color:#1e3a8a;
+        font-size:14px;
+        font-weight:700;
+        padding:10px 12px;
+        border-bottom:1px solid #bfdbfe;
+    }
+    .sch-table td.voyage-cell::before{
+        content:"VOYAGE";
+        color:#1e40af;
+    }
+
+    /* ETD 行突出 */
+    .sch-table td.etd-highlight{
+        background:#eff6ff;
+        font-weight:800;
+        color:#1d4ed8;
+        font-size:16px;
+    }
+    .sch-table td.etd-highlight::before{
+        color:#1e40af;
+    }
+
+    /* 操作行 */
+    .sch-table td.action-cell{
+        background:#f8fafc;
+        justify-content:center;
+        padding:10px;
+    }
+    .sch-table td.action-cell::before{ display:none; }
+    .sch-table td.action-cell .btn-copy-single{
+        width:100%;
+        padding:10px;
+        font-size:14px;
+    }
+}
+
+@media(max-width: 600px){
+    .port-check-group{ grid-template-columns: repeat(3, 1fr); }
+    .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 420px){
+    .port-check-group{ grid-template-columns: repeat(2, 1fr); }
+    .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== LOCAL 费用卡片 ===== */
+.local-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+.local-card{
+    border:1px solid #d8dde6;
+    border-radius:8px;
+    padding:12px;
+    background:#fbfcfe;
+    transition:opacity 0.2s;
+}
+.local-card.disabled{ opacity:0.55; }
+.local-ct-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    font-weight:700;
+    color:#1e3a8a;
+    margin:0 0 10px 0;
+    cursor:pointer;
+    user-select:none;
+}
+.local-ct-label input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+    margin:0;
+}
+.local-fee-list{
+    margin:0;
+    padding-left:22px;
+    font-size:14px;
+    line-height:1.8;
+    color:#334155;
+}
+.local-fee-list li{padding:1px 0;}
+</style>
+</head>
+<body>
+<div class="tab-bar">
+    <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="panel1">Function1 | Schedule & Quotation</button>
+        <button class="tab-btn" data-tab="panel2">Function2 | General Quotation</button>
+        <button class="tab-btn" data-tab="panel3">Function3 | Rate Cost</button>
+    </div>
+</div>
+
+<!-- Function1 Panel -->
+<div id="panel1" class="panel active">
+<div class="box">
+    <div class="row">
+        <div>
+            <label>POL: </label>
+            <select id="polSel">
+                <option value="">--Select Port--</option>
+                <option value="NINGBO">NINGBO</option>
+                <option value="SHENZHEN">SHENZHEN</option>
+                <option value="NANSHA">NANSHA</option>
+                <option value="QINGDAO">QINGDAO</option>
+                <option value="SHANGHAI">SHANGHAI</option>
+                <option value="TIANJIN">TIANJIN</option>
+                <option value="XIAMEN">XIAMEN</option>
+                <option value="HONGKONG">HONGKONG</option>
+            </select>
+        </div>
+        <div>
+            <label>Carrier: </label>
+            <select id="carrierSel">
+                <option value="">--Select Carrier--</option>
+                <option value="CMA">CMA</option>
+                <option value="MSC">MSC</option>
+                <option value="ZIM">ZIM</option>
+                <option value="MSK">MSK</option>
+            </select>
+        </div>
+    </div>
+    <div class="table-wrap" id="result">
+        <p class="hint">Please select POL and Carrier to view the schedule.</p>
+    </div>
+</div>
+
+<div class="box">
+    <h3>Quote Charges Setting</h3>
+    <div class="check-item">
+        <input type="checkbox" id="chk20gpBottom">
+        <label>20GP: USD <input type="number" id="val20gpBottom" placeholder="Pending"> /20GP</label>
+    </div>
+    <div class="check-item">
+        <input type="checkbox" id="chk40hqBottom">
+        <label>40HQ: USD <input type="number" id="val40hqBottom" placeholder="Pending"> /40HQ</label>
+    </div>
+    <div class="check-item">
+        <input type="checkbox" id="chkTelexBottom">
+        <label>Telex Release Fee: USD <input type="number" id="telexValBottom" value="65"> /BL</label>
+    </div>
+    <div class="check-item">
+        <input type="checkbox" id="chkProfitBottom">
+        <label>Profit Sharing: USD <input type="number" id="profitValBottom" value="50"> /CTNR</label>
+    </div>
+</div>
+
+<div class="box">
+    <h3>EXW‑LOCAL Charges Reference</h3>
+    <div id="localResult">
+        <p class="hint">Please select POL to view EXW-LOCAL charges.</p>
+    </div>
+</div>
+</div>
+
+<!-- Function2 Panel -->
+<div id="panel2" class="panel">
+<div class="box">
+    <h3>General Quotation</h3>
+    <div class="group-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+            <div><b>Port Of Departure (Multiple selection)</b></div>
+            <button type="button" id="btnSelectAllPol">Select / Deselect All Ports</button>
+        </div>
+
+        <div class="port-check-group">
+            <label><input type="checkbox" class="chk-pol-g2" value="NINGBO"> NINGBO</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="QINGDAO"> QINGDAO</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="SHANGHAI"> SHANGHAI</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="SHENZHEN"> SHENZHEN</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="XIAMEN"> XIAMEN</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="NANSHA"> NANSHA</label>
+            <label><input type="checkbox" class="chk-pol-g2" value="TIANJIN"> TIANJIN</label>
+        </div>
+
+        <div class="row-single">
+            <label>Ocean Freight 20GP USD：<input type="number" id="g2_20gp" placeholder="Input amount"></label>
+        </div>
+        <div class="row-single">
+            <label>Ocean Freight 40HQ USD：<input type="number" id="g2_40hq" placeholder="Input amount"></label>
+        </div>
+
+        <div style="margin-top:12px;">
+            <div><b>Carrier (Multiple selection)</b></div>
+            <div class="carrier-check-group">
+                <label><input type="checkbox" class="chk-carrier-g2" value="CMA"> CMA</label>
+                <label><input type="checkbox" class="chk-carrier-g2" value="MSC"> MSC</label>
+                <label><input type="checkbox" class="chk-carrier-g2" value="ZIM"> ZIM</label>
+                <label><input type="checkbox" class="chk-carrier-g2" value="MSK"> MSK</label>
+            </div>
+        </div>
+
+        <div class="row-single">
+            <label>Free Time DAYS：<input type="number" id="g2_freetime" value="21"></label>
+        </div>
+        <div class="row-single">
+            <label>Validity Start：<input type="text" id="g2_valid_start" placeholder="2026.09.22"></label>
+        </div>
+        <div class="row-single">
+            <label>Validity End：<input type="text" id="g2_valid_end" placeholder="2026.09.30"></label>
+        </div>
+
+        <div class="check-item">
+            <input type="checkbox" id="g2_chkTelex">
+            <label>Telex Release Fee USD/BL：<input type="number" id="g2_telex" value="65"></label>
+        </div>
+        <div class="check-item">
+            <input type="checkbox" id="g2_chkProfit">
+            <label>Profit Sharing USD/CTNR：<input type="number" id="g2_profit" value="50"></label>
+        </div>
+        <div class="row">
+            <button class="btn-copy" id="btnCopyG2">📋 Copy General Quotation</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Function3 Panel -->
+<div id="panel3" class="panel">
+    <div class="box">
+        <h3>Rate Cost Reference</h3>
+
+        <div class="rate-toolbar">
+            <div>
+                <label>POL: </label>
+                <select id="ratePolSel">
+                    <option value="">--All Ports--</option>
+                    <option value="QINGDAO">QINGDAO</option>
+                    <option value="SHANGHAI">SHANGHAI</option>
+                    <option value="NINGBO">NINGBO</option>
+                    <option value="TIANJIN">TIANJIN</option>
+                    <option value="NANSHA">NANSHA</option>
+                    <option value="XIAMEN">XIAMEN</option>
+                    <option value="SHENZHEN">SHENZHEN</option>
+                    <option value="DALIAN">DALIAN</option>
+                </select>
+            </div>
+            <div>
+                <label>Carrier: </label>
+                <select id="rateCarrierSel">
+                    <option value="">--All Carriers--</option>
+                    <option value="CMA">CMA</option>
+                    <option value="MSC">MSC</option>
+                    <option value="MSK">MSK</option>
+                    <option value="ZIM">ZIM</option>
+                </select>
+            </div>
+            <div>
+                <button type="button" id="btnShowAllRates">🔄 Show All Rates</button>
+            </div>
+            <div>
+                <button type="button" id="btnCopyRateImage">📋 Copy as Image</button>
+            </div>
+        </div>
+
+        <div id="rateCostResult">
+            <p class="hint">Loading...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+/* =========================================================
+   1. 船期数据
+   ========================================================= */
+const FREE_TIME_DEFAULT = 21;
+
+const SAILINGS = {
+  CMA: {
+    NINGBO: [
+      ["CSCL ZEEBRUGGE/057E","2026.09.27","2026.11.12",46],
+      ["SEASPAN GUATEMALA/002E","2026.10.02","2026.11.17",46],
+      ["BLANK SAILING","2026.10.09","/",46],
+      ["CMA CGM BALI/0PPORE1MA","2026.10.16","2026.12.01",46],
+      ["COSCO HELLAS/118E","2026.10.23","2026.12.08",46],
+      ["CMA CGM SCANDOLA/PEX030E19","2026.10.30","2026.12.15",46]
+    ],
+    SHENZHEN: [
+      ["CSCL ZEEBRUGGE/057E","2026.09.23","2026.11.12",50],
+      ["SEASPAN GUATEMALA/002E","2026.09.28","2026.11.17",50],
+      ["BLANK SAILING","2026.10.05","/",50],
+      ["CMA CGM BALI/0PPORE1MA","2026.10.12","2026.12.01",50],
+      ["COSCO HELLAS/118E","2026.10.19","2026.12.08",50],
+      ["CMA CGM SCANDOLA/PEX030E19","2026.10.26","2026.12.15",50]
+    ],
+    NANSHA: [
+      ["CSCL ZEEBRUGGE/057E","2026.09.23","2026.11.12",50],
+      ["SEASPAN GUATEMALA/002E","2026.09.28","2026.11.17",50],
+      ["BLANK SAILING","2026.10.05","/",50],
+      ["CMA CGM BALI/0PPORE1MA","2026.10.12","2026.12.01",50],
+      ["COSCO HELLAS/118E","2026.10.19","2026.12.08",50],
+      ["CMA CGM SCANDOLA/PEX030E19","2026.10.26","2026.12.15",50]
+    ],
+    QINGDAO: [
+      ["CMA CGM UNITY/0PPOHE1MA","2026.09.24","2026.11.04",41],
+      ["CSCL ZEEBRUGGE/057E","2026.10.02","2026.11.12",41],
+      ["SEASPAN GUATEMALA/002E","2026.09.07","2026.11.17",41],
+      ["BLANK SAILING","2026.10.14","/",41],
+      ["CMA CGM BALI/0PPORE1MA","2026.10.21","2026.12.01",41],
+      ["COSCO HELLAS/118E","2026.10.28","2026.12.08",41]
+    ],
+    SHANGHAI: [
+      ["CMA CGM UNITY/0PPOHE1MA","2026.09.21","2026.11.04",44],
+      ["CMA CGM UNITY/0PPOHE1MA","2026.09.29","2026.11.12",44],
+      ["SEASPAN GUATEMALA/002E","2026.10.04","2026.11.17",44],
+      ["CMA CGM BALI/0PPORE1MA","2026.10.18","2026.12.01",44],
+      ["COSCO HELLAS/118E","2026.10.25","2026.12.08",44]
+    ],
+    TIANJIN: [
+      ["OOCL MALAYSIA/073W","2026.09.29","2026.11.17",49],
+      ["OOCL SINGAPORE/069W","2026.10.07","2026.11.25",49],
+      ["OOCL TAIPEI/093W","2026.10.14","2026.12.02",49],
+      ["XIN MEI ZHOU/169W","2026.10.15","2026.12.03",49]
+    ]
+  },
+
+  MSC: {
+    NINGBO: [
+      ["MSC FELIXSTOWE/QA638A","2026.09.25","2026.11.02",38],
+      ["MSC ROSHNEY V/QA639A","2026.09.29","2026.11.06",38],
+      ["MSC FREEPORT V/QA640A","2026.10.04","2026.11.11",38],
+      ["MSC SHRISTI/QA641A","2026.10.11","2026.11.18",38],
+      ["MSC SHRINIKA V/QA642A","2026.10.20","2026.11.27",38],
+      ["MSC TAMPA V/QA643A","2026.10.22","2026.11.29",38]
+    ],
+    SHENZHEN: [
+      ["MSC DENISSE X/UK637A","2026.09.18","2026.10.28",40],
+      ["MSC IVANA/UK638A","2026.09.28","2026.11.07",40],
+      ["MSC SOLA/UK639A","2026.10.01","2026.11.10",40],
+      ["GSL SOFIA/UK640A","2026.10.05","2026.11.14",40],
+      ["MSC YUKTA X/UK641A","2026.10.12","2026.11.21",40],
+      ["CAPE SOUNIO/UK642A","2026.10.21","2026.11.30",40]
+    ],
+    NANSHA: [
+      ["MSC DENISSE X/UK637A","2026.09.18","2026.10.28",40],
+      ["MSC IVANA/UK638A","2026.09.28","2026.11.07",40],
+      ["MSC SOLA/UK639A","2026.10.01","2026.11.10",40],
+      ["GSL SOFIA/UK640A","2026.10.05","2026.11.14",40],
+      ["MSC YUKTA X/UK641A","2026.10.12","2026.11.21",40],
+      ["CAPE SOUNIO/UK642A","2026.10.21","2026.11.30",40]
+    ],
+    QINGDAO: [
+      ["MSC EMMA/UX636A","2026.09.24","2026.10.30",47],
+      ["LE HAVRE/QI640A","2026.10.01","2026.11.06",47],
+      ["MSC SUSANNA/QI641A","2026.10.09","2026.11.14",47],
+      ["MSC TIANPING/QI642A","2026.10.15","2026.11.20",47],
+      ["MSC BRANKA/QI643A","2026.10.22","2026.11.27",47],
+      ["MSC BIANCA/QI635R","2026.10.30","2026.12.05",47]
+    ],
+    SHANGHAI: [
+      ["MSC DANIT/UX637A","2026.09.25","2026.11.02",38],
+      ["MSC LORENZA/UX639A","2026.10.05","2026.11.12",38],
+      ["MSC PALERMO/UX640A","2026.10.10","2026.11.17",38],
+      ["MSC DARIA/UX641A","2026.10.15","2026.11.22",38],
+      ["MSC ANITA/UX642A","2026.10.21","2026.11.28",38],
+      ["MSC VICTORIA/UX643A","2026.10.30","2026.12.07",38]
+    ],
+    TIANJIN: [
+      ["MSC ROSA M/FY640A","2026.09.30","2026.11.14",45],
+      ["MSC TARANTO/FY641A","2026.10.05","2026.11.19",45],
+      ["MSC MELATILDE/FY642A","2026.10.12","2026.11.26",45],
+      ["MSC SAVONA/FY643A","2026.10.22","2026.12.06",45]
+    ]
+  },
+
+  ZIM: {
+    NINGBO: [
+      ["ZIM AMBER/15E","2026.09.22","2026.11.03",42],
+      ["ZIM ARIES/12E","2026.09.30","2026.11.11",42],
+      ["ZIM ALEXANDRITE/8E","2026.10.10","2026.11.21",42],
+      ["ZIM SCORPIO/11E","2026.10.15","2026.11.26",42],
+      ["ZIM CORAL/13E","2026.10.18","2026.11.29",42],
+      ["ZIM PEARL/12E","2026.10.25","2026.12.06",42]
+    ],
+    SHENZHEN: [
+      ["ZIM MOUNT DENALI/15E","2026.09.20","2026.10.18",42],
+      ["ZIM MOUNT FUJI/12E","2026.09.27","2026.10.25",42],
+      ["ZIM MOUNT EVEREST/15E","2026.10.02","2026.10.30",42],
+      ["ZIM MOUNT VINSON/12E","2026.10.09","2026.11.06",42],
+      ["ZIM MOUNT OLYMPUS/12E","2026.09.23","2026.11.20",42],
+      ["ZIM MOUNT KILIMANJARO/13E","2026.10.30","2026.11.27",42]
+    ],
+    NANSHA: [
+      ["ZIM MOUNT DENALI/15E","2026.09.20","2026.10.18",42],
+      ["ZIM MOUNT FUJI/12E","2026.09.27","2026.10.25",42],
+      ["ZIM MOUNT EVEREST/15E","2026.10.02","2026.10.30",42],
+      ["ZIM MOUNT VINSON/12E","2026.10.09","2026.11.06",42],
+      ["ZIM MOUNT OLYMPUS/12E","2026.09.23","2026.11.20",42],
+      ["ZIM MOUNT KILIMANJARO/13E","2026.10.30","2026.11.27",42]
+    ],
+    QINGDAO: [
+      ["ZIM ARIES/12E","2026.09.27","2026.11.09",42],
+      ["ZIM ALEXANDRITE/8E","2026.10.07","2026.11.19",42],
+      ["ZIM SCORPIO/11E","2026.10.12","2026.11.24",42],
+      ["ZIM CORAL/13E","2026.10.15","2026.11.27",42],
+      ["ZIM PEARL/12E","2026.10.22","2026.12.04",42],
+      ["SAPPHIRE/10E","2026.10.29","2026.12.11",42]
+    ],
+    SHANGHAI: [
+      ["ZIM OPAL/12E","2026.09.21","2026.10.31",42],
+      ["ZIM ARIES/12E","2026.10.02","2026.11.11",42],
+      ["ZIM ALEXANDRITE/8E","2026.10.12","2026.11.21",42],
+      ["ZIM SCORPIO/11E","2026.10.17","2026.11.26",42],
+      ["ZIM CORAL/13E","2026.10.20","2026.11.29",42],
+      ["ZIM PEARL/12E","2026.10.27","2026.12.06",42]
+    ],
+    TIANJIN: [
+      ["BIG GEORGE/26039E","2026.09.24","2026.11.10",47],
+      ["BIG GEORGE/26040E","2026.10.01","2026.11.17",47],
+      ["BIG GEORGE/26041E","2026.10.05","2026.11.21",47],
+      ["BIG GEORGE/26042E","2026.10.12","2026.11.28",47],
+      ["BIG GEORGE/26043E","2026.10.19","2026.12.05",47],
+      ["BIG GEORGE/26044E","2026.10.26","2026.12.12",47]
+    ]
+  },
+
+  MSK: {
+    NINGBO: [
+      ["MAERSK TOKYO/638E","2026.09.22","2026.11.04",43],
+      ["MAERSK EINDHOVEN/639E","2026.09.29","2026.11.11",43],
+      ["SKAGEN MAERSK/640E","2026.10.06","2026.11.18",43],
+      ["MAERSK YUKON/641E","2026.10.13","2026.11.25",43],
+      ["GUTHORM MAERSK/642E","2026.10.20","2026.12.02",43],
+      ["MAERSK SEBAROK/643E","2026.10.27","2026.12.09",43]
+    ],
+    SHENZHEN: [
+      ["SEASPAN AMAZON/637E","2026.09.23","2026.11.17",43],
+      ["MAERSK LAVRAS/638E","2026.09.26","2026.11.20",43],
+      ["MAERSK SAIGON/639E","2026.10.01","2026.11.25",43],
+      ["MAERSK SANTANA/640E","2026.10.08","2026.12.02",43],
+      ["MAERSK ATHABASCA/641E","2026.10.15","2026.12.09",43],
+      ["MAERSK SHIVLING/642E","2026.10.25","2026.12.19",43],
+      ["MAERSK SALTORO/643E","2026.10.29","2026.12.23",43]
+    ],
+    NANSHA: [
+      ["SEASPAN AMAZON/637E","2026.09.23","2026.11.17",43],
+      ["MAERSK LAVRAS/638E","2026.09.26","2026.11.20",43],
+      ["MAERSK SAIGON/639E","2026.10.01","2026.11.25",43],
+      ["MAERSK SANTANA/640E","2026.10.08","2026.12.02",43],
+      ["MAERSK ATHABASCA/641E","2026.10.15","2026.12.09",43],
+      ["MAERSK SHIVLING/642E","2026.10.25","2026.12.19",43],
+      ["MAERSK SALTORO/643E","2026.10.29","2026.12.23",43]
+    ],
+    QINGDAO: [
+      ["SEASPAN GLORY/639E","2026.09.27","2026.11.28",62],
+      ["SEASPAN PRIDE/640E","2026.10.04","2026.12.05",62],
+      ["MAERSK ESSEN/641E","2026.10.11","2026.12.12",62],
+      ["MAERSK ESMERALDAS/642E","2026.10.18","2026.12.19",62],
+      ["SEASPAN DEVELOPMENT/643E","2026.10.25","2026.12.26",62]
+    ],
+    SHANGHAI: [
+      ["MAERSK SALINA/637E","2026.09.21","2026.11.10",50],
+      ["MAERSK TOKYO/638E","2026.09.24","2026.11.13",50],
+      ["MAERSK EINDHOVEN/639E","2026.09.26","2026.11.15",50],
+      ["SKAGEN MAERSK/640E","2026.10.02","2026.11.21",50],
+      ["MAERSK YUKON/641E","2026.10.09","2026.11.28",50],
+      ["GUTHORM MAERSK/642E","2026.10.16","2026.12.05",50],
+      ["MAERSK SEBAROK/643E","2026.10.23","2026.12.12",50],
+      ["SALLY MAERSK/644E","2026.10.30","2026.12.19",50]
+    ],
+    TIANJIN: [
+      ["UTE/639E","2026.09.27","2026.11.28",62],
+      ["REN JIAN 25/640E","2026.10.04","2026.12.05",62],
+      ["SYNERGY KEELUNG/641E","2026.10.11","2026.12.12",62],
+      ["SYNERGY BUSAN/642E","2026.10.18","2026.12.19",62],
+      ["SEASPAN LINGUE/643E","2026.10.25","2026.12.26",62]
+    ]
+  }
+};
+
+/* =========================================================
+   2. EXW‑LOCAL 费用数据
+   ========================================================= */
+const LOCAL_FEE = {
+  SHENZHEN: {
+    "20GP": ["THC：USD170/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD50/BL","Handling fee：USD50/BL"],
+    "40HQ": ["THC：USD250/40HQ","DOC：USD75/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD55/SET","Handling fee：USD50/BL"]
+  },
+  NANSHA: {
+    "20GP": ["THC：USD170/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD50/BL","Handling fee：USD50/BL"],
+    "40HQ": ["THC：USD250/40HQ","DOC：USD75/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD55/SET","Handling fee：USD50/BL"]
+  },
+  QINGDAO: {
+    "20GP": ["THC：USD120/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Terminal surcharge fee：USD30/20GP","Pick empty container fee：USD25/20GP","Port charges：USD20/20GP"],
+    "40HQ": ["THC：USD160/40HQ","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Terminal surcharge fee：USD65/40HQ","Pick empty container fee：USD50/40HQ","Port charges：USD30/40HQ"]
+  },
+  TIANJIN: {
+    "20GP": ["THC：USD120/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Port charges：USD25/20GP","EDI：USD20/CNTR"],
+    "40HQ": ["THC：USD160/40HQ","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Port charges：USD50/40HQ","EDI：USD20/CNTR"]
+  },
+  SHANGHAI: {
+    "20GP": ["THC：USD140/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","YANGSHAN PORT FEE：USD100/20GP","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Booking fee：USD50/20GP","EDI：USD20/CNTR"],
+    "40HQ": ["THC：USD170/40HQ","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","YANGSHAN PORT FEE：USD120/40HQ","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Booking fee：USD70/40HQ","EDI：USD20/CNTR"]
+  },
+  NINGBO: {
+    "20GP": ["THC：USD140/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","MEISHAN PORT FEE：USD100/20GP","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Booking fee：USD50/20GP","EDI：USD20/CNTR","HANDLING FEE：USD50/BL"],
+    "40HQ": ["THC：USD170/40HQ","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","MEISHAN PORT FEE：USD120/40HQ","Clearance Fee：USD20/BL","Handling fee：USD50/BL","Booking fee：USD70/40HQ","EDI：USD20/CNTR","HANDLING FEE：USD50/BL"]
+  },
+  XIAMEN: {
+    "20GP": ["THC：USD140/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","EDI：USD20/CNTR"],
+    "40HQ": ["THC：USD170/40HQ","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD20/BL","Handling fee：USD50/BL","EDI：USD20/CNTR"]
+  },
+  HONGKONG: {
+    "20GP": ["THC：USD200/20GP","DOC：USD70/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD50/BL","Handling fee：USD50/BL"],
+    "40HQ": ["THC：USD300/40HQ","DOC：USD75/BL","SEAL：USD10/CTNR","VGM：USD15/CTNR","Trucking fee：AT COST","Clearance Fee：USD55/SET","Handling fee：USD50/BL"]
+  }
+};
+
+/* =========================================================
+   3. Tab 切换
+   ========================================================= */
+const tabBtns = document.querySelectorAll(".tab-btn");
+tabBtns.forEach(btn=>{
+    btn.addEventListener("click",function(){
+        const tabId = this.dataset.tab;
+        tabBtns.forEach(b=>b.classList.remove("active"));
+        this.classList.add("active");
+        document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+    })
+});
+
+/* =========================================================
+   4. 通用复制函数（无成功弹窗）
+   ========================================================= */
+async function copyText(text){
+    try{
+        if(navigator.clipboard && window.isSecureContext){
+            await navigator.clipboard.writeText(text);
+        }else{
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+    }catch(e){
+        alert("Copy failed, please copy manually:\n\n" + text);
+    }
+}
+
+/* =========================================================
+   5. Function1 —— 船期表（手机端卡片）
+   ========================================================= */
+const polSel = document.getElementById('polSel');
+const carrierSel = document.getElementById('carrierSel');
+
+function renderSchedule(){
+    const pol = polSel.value;
+    const carrier = carrierSel.value;
+    const el = document.getElementById('result');
+
+    if(!pol || !carrier){
+        el.innerHTML = '<p class="hint">Please select POL and Carrier to view the schedule.</p>';
+        return;
+    }
+
+    const list = (SAILINGS[carrier] && SAILINGS[carrier][pol]) ? SAILINGS[carrier][pol] : [];
+
+    if(!list.length){
+        el.innerHTML = '<p class="hint">No schedule available for ' + pol + ' / ' + carrier + '.</p>';
+        return;
+    }
+
+    let html = '';
+    html += '<p class="pod-note"><b>POL:</b> ' + pol +
+            ' &nbsp;|&nbsp; <b>POD:</b> PUERTO CABELLO / LA GUAIRA' +
+            ' &nbsp;|&nbsp; <b>Carrier:</b> ' + carrier + '</p>';
+    html += '<table class="sch-table"><thead><tr>' +
+            '<th>Voyage</th><th>Carrier</th><th>Vessel/Voyage</th><th>ETD</th><th>ETA</th>' +
+            '<th>Transit Time</th><th>Free Time</th><th>Action</th>' +
+            '</tr></thead><tbody>';
+
+    list.forEach((s, i)=>{
+        const vessel = s[0] || '/';
+        const isBlank = vessel.toUpperCase().indexOf('BLANK') === 0;
+        html += '<tr>' +
+                '<td class="voyage-cell" data-label="Voyage">Voyage ' + (i+1) + '</td>' +
+                '<td data-label="Carrier">' + carrier + '</td>' +
+                '<td class="' + (isBlank ? 'blank' : '') + '" data-label="Vessel/Voyage">' + vessel + '</td>' +
+                '<td class="etd-highlight" data-label="ETD">' + s[1] + '</td>' +
+                '<td class="' + (s[2] === '/' ? 'blank' : '') + '" data-label="ETA">' + s[2] + '</td>' +
+                '<td data-label="Transit Time">' + s[3] + ' DAYS</td>' +
+                '<td data-label="Free Time">' + FREE_TIME_DEFAULT + ' DAYS</td>' +
+                '<td class="action-cell"><button class="btn-copy-single" data-index="' + i + '">📋 Copy</button></td>' +
+                '</tr>';
+    });
+
+    html += '</tbody></table>';
+    el.innerHTML = html;
+
+    el.querySelectorAll('.btn-copy-single').forEach(btn=>{
+        btn.addEventListener('click', function(){
+            const idx = parseInt(this.dataset.index, 10);
+            copySingleSchedule(pol, carrier, idx);
+        });
+    });
+}
+
+function copySingleSchedule(pol, carrier, index){
+    const list = SAILINGS[carrier][pol];
+    if(!list || !list[index]) return;
+    const s = list[index];
+
+    const oceanLines = [];
+    const chk20 = document.getElementById('chk20gpBottom');
+    const val20 = document.getElementById('val20gpBottom');
+    const chk40 = document.getElementById('chk40hqBottom');
+    const val40 = document.getElementById('val40hqBottom');
+    if(chk20 && chk20.checked && val20 && val20.value.trim() !== ''){
+        oceanLines.push('Ocean Freight: USD ' + val20.value.trim() + ' for 20GP');
+    }
+    if(chk40 && chk40.checked && val40 && val40.value.trim() !== ''){
+        oceanLines.push('Ocean Freight: USD ' + val40.value.trim() + ' for 40HQ');
+    }
+
+    const chkTelex = document.getElementById('chkTelexBottom');
+    const chkProfit = document.getElementById('chkProfitBottom');
+    const telex = document.getElementById('telexValBottom').value || '65';
+    const profit = document.getElementById('profitValBottom').value || '50';
+
+    const lines = [];
+    lines.push('Below FOB ocean freight for your kindly ref.');
+    lines.push('Port Of Departure: ' + pol);
+    lines.push('Port Of Destination: PUERTO CABELLO / LA GUAIRA');
+    oceanLines.forEach(l=> lines.push(l));
+    lines.push('Carrier: ' + carrier);
+    lines.push('Free Time: ' + FREE_TIME_DEFAULT + ' DAYS');
+    lines.push('Routing: TRANSIT');
+    lines.push('Vessel/Voyage: ' + s[0]);
+    lines.push('ETD: ' + s[1]);
+    lines.push('ETA: ' + s[2]);
+    lines.push('Transit Time: ' + s[3] + ' DAYS');
+
+    const feeLines = [];
+    if(chkTelex && chkTelex.checked){
+        feeLines.push('Telex Release Fee: USD ' + telex + '/BL');
+    }
+    if(chkProfit && chkProfit.checked){
+        feeLines.push('Profit Sharing: USD ' + profit + '/CTNR');
+    }
+    if(feeLines.length){
+        lines.push('');
+        feeLines.forEach(l=> lines.push(l));
+    }
+
+    const localFee = LOCAL_FEE[pol];
+    if(localFee){
+        ['20GP','40HQ'].forEach(function(ct){
+            const chk = document.querySelector('.local-ct-chk[data-ct="' + ct + '"]');
+            if(chk && chk.checked){
+                lines.push('');
+                lines.push(pol + ' LOCAL：');
+                const items = localFee[ct];
+                items.forEach(function(item, i){
+                    lines.push((i+1) + '.' + item);
+                });
+            }
+        });
+    }
+
+    copyText(lines.join('\n'));
+}
+
+/* =========================================================
+   6. Function1 —— EXW‑LOCAL 费用
+   ========================================================= */
+function renderLocal(){
+    const pol = polSel.value;
+    const el = document.getElementById('localResult');
+
+    if(!pol){
+        el.innerHTML = '<p class="hint">Please select POL to view EXW-LOCAL charges.</p>';
+        return;
+    }
+
+    const fee = LOCAL_FEE[pol];
+    if(!fee){
+        el.innerHTML = '<p class="hint">No EXW-LOCAL charges data for ' + pol + '.</p>';
+        return;
+    }
+
+    let html = '<p class="pod-note"><b>POL:</b> ' + pol + ' &nbsp;|&nbsp; EXW‑LOCAL Charges</p>';
+    html += '<div class="local-grid">';
+
+    ['20GP','40HQ'].forEach(function(ct){
+        html += '<div class="local-card disabled" data-ct="' + ct + '">';
+        html += '<label class="local-ct-label">';
+        html += '<input type="checkbox" class="local-ct-chk" data-ct="' + ct + '">';
+        html += '<span>' + ct + '</span>';
+        html += '</label>';
+        html += '<ol class="local-fee-list">';
+        fee[ct].forEach(function(item){
+            html += '<li>' + item + '</li>';
+        });
+        html += '</ol>';
+        html += '</div>';
+    });
+
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+const localResultEl = document.getElementById('localResult');
+localResultEl.addEventListener('change', function(e){
+    const chk = e.target.closest('.local-ct-chk');
+    if(!chk) return;
+    const ct = chk.dataset.ct;
+    const card = localResultEl.querySelector('.local-card[data-ct="' + ct + '"]');
+    if(!card) return;
+    if(chk.checked){
+        card.classList.remove('disabled');
+    }else{
+        card.classList.add('disabled');
+    }
+});
+
+polSel.addEventListener('change', function(){
+    renderSchedule();
+    renderLocal();
+});
+carrierSel.addEventListener('change', renderSchedule);
+
+renderSchedule();
+renderLocal();
+
+/* =========================================================
+   7. Function2 —— General Quotation
+   ========================================================= */
+document.getElementById('btnSelectAllPol').addEventListener('click',function(){
+    const items = document.querySelectorAll('.chk-pol-g2');
+    const allChecked = Array.from(items).every(cb=>cb.checked);
+    items.forEach(cb=> cb.checked = !allChecked);
+});
+
+document.getElementById('btnCopyG2').addEventListener('click', function(){
+    const polList = [];
+    document.querySelectorAll('.chk-pol-g2:checked').forEach(el=>polList.push(el.value));
+    const carrierList = [];
+    document.querySelectorAll('.chk-carrier-g2:checked').forEach(el=>carrierList.push(el.value));
+
+    const f20gp = document.getElementById('g2_20gp').value.trim();
+    const f40hq = document.getElementById('g2_40hq').value.trim();
+    const freeTime = document.getElementById('g2_freetime').value||"21";
+    const vStart = document.getElementById('g2_valid_start').value.trim()||"---";
+    const vEnd = document.getElementById('g2_valid_end').value.trim()||"---";
+
+    const chkTelex = document.getElementById('g2_chkTelex');
+    const chkProfit = document.getElementById('g2_chkProfit');
+    const telex = document.getElementById('g2_telex').value || "65";
+    const profit = document.getElementById('g2_profit').value || "50";
+
+    const lines = [];
+    lines.push("Below FOB ocean freight for your kindly ref.");
+    lines.push("Port Of Departure: " + (polList.length>0 ? polList.join("/") : "Not Selected"));
+    lines.push("Port Of Destination: PUERTO CABELLO/LA GUAIRA");
+
+    const ofParts = [];
+    if(f20gp) ofParts.push("USD " + f20gp + " for 20GP");
+    if(f40hq) ofParts.push("USD " + f40hq + " for 40HQ");
+    if(ofParts.length){
+        lines.push("Ocean Freight: " + ofParts.join(", "));
+    }
+
+    lines.push("Carrier: " + (carrierList.length>0 ? carrierList.join("/") : "Not Selected"));
+    lines.push("Free Time: " + freeTime + " DAYS");
+    lines.push("Validity: " + vStart + "--" + vEnd);
+
+    const feeLines = [];
+    if(chkTelex && chkTelex.checked){
+        feeLines.push("Telex Release Fee: USD " + telex + "/BL");
+    }
+    if(chkProfit && chkProfit.checked){
+        feeLines.push("Profit Sharing: USD " + profit + "/CTNR");
+    }
+    if(feeLines.length){
+        lines.push("");
+        feeLines.forEach(l=> lines.push(l));
+    }
+
+    copyText(lines.join("\n"));
+});
+
+/* =========================================================
+   8. Function3 —— Rate Cost
+   ========================================================= */
+const RATE_COST_DATA = [
+  { pol: "QINGDAO", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10190, price40: 10190, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
+  { pol: "SHANGHAI/NINGBO/TIANJIN/SHENZHEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10214, price40: 10214, freeTime: "21days", validity: "9.22-10.11", remark: "" },
+  { pol: "NANSHA", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10290, price40: 10290, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
+  { pol: "XIAMEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10314, price40: 10314, freeTime: "21days", validity: "9.22-10.11", remark: "" },
+  { pol: "SHENZHEN/SHANGHAI/NINGBO/QINGDAO/TIANJIN/XIAMEN/DALIAN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "MSC", price20: 10000, price40: 10000, freeTime: "21days", validity: "9.18-10.11", remark: "INCL PCS&DTHC" },
+  { pol: "QINGDAO/SHANGHAI/NINGBO", pod: "LA GUAIRA", carrier: "MSK", price20: 9500, price40: 9500, freeTime: "21days", validity: "ETD", remark: "NINGBO ETD9.29  |  SHANGHAI  ETD9.25/10.9  |  QINGDAO ETD9.27/10.11<br>LOSS SPACE USD200" },
+  { pol: "SHENZHEN", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "ZIM", price20: 11598, price40: 13073, freeTime: "21days", validity: "9.15-9.21", remark: "OF:GUARANAO/MARACAIBO/GUANTA  USD12065/13610<br>NANSHA FEEDER FEE: +USD160/200" }
+];
+
+const ratePolSel = document.getElementById('ratePolSel');
+const rateCarrierSel = document.getElementById('rateCarrierSel');
+
+function renderRateCost(){
+    const el = document.getElementById('rateCostResult');
+    if(!el) return;
+
+    const selPol = ratePolSel.value;
+    const selCarrier = rateCarrierSel.value;
+
+    const filtered = RATE_COST_DATA.filter(function(row){
+        if(selCarrier && row.carrier !== selCarrier) return false;
+        if(selPol){
+            const pols = row.pol.split("/").map(function(s){ return s.trim().toUpperCase(); });
+            if(pols.indexOf(selPol) === -1) return false;
+        }
+        return true;
+    });
+
+    if(!filtered.length){
+        el.innerHTML = '<p class="hint">No rate found for the selected POL / Carrier.</p>';
+        return;
+    }
+
+    let html = '<p class="rate-summary">' +
+        '<b>POL:</b> ' + (selPol || 'All') +
+        ' &nbsp;|&nbsp; <b>Carrier:</b> ' + (selCarrier || 'All') +
+        ' &nbsp;|&nbsp; <b>Total:</b> ' + filtered.length + ' rate(s)' +
+        '</p>';
+
+    html += '<div class="table-wrap">';
+    html += '<table class="rate-table"><thead><tr>' +
+        '<th>POL</th>' +
+        '<th>POD</th>' +
+        '<th>CARRIER</th>' +
+        '<th>20GP (USD)</th>' +
+        '<th>40HC (USD)</th>' +
+        '<th>FREE TIME</th>' +
+        '<th>VALIDITY</th>' +
+        '<th>REMARK</th>' +
+        '</tr></thead><tbody>';
+
+    filtered.forEach(function(row){
+        const p20 = row.price20 - 200;
+        const p40 = row.price40 - 200;
+
+        html += '<tr>';
+        html += '<td class="pol" data-label="POL">' + row.pol + '</td>';
+        html += '<td class="pod" data-label="POD">' + row.pod + '</td>';
+        html += '<td class="carrier" data-label="CARRIER">' + row.carrier + '</td>';
+        html += '<td class="price" data-label="20GP (USD)">' + p20 + '</td>';
+        html += '<td class="price" data-label="40HC (USD)">' + p40 + '</td>';
+        html += '<td class="freetime" data-label="FREE TIME">' + row.freeTime + '</td>';
+        html += '<td class="validity" data-label="VALIDITY">' + row.validity + '</td>';
+        html += '<td class="remark">' + (row.remark || '') + '</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+ratePolSel.addEventListener('change', renderRateCost);
+rateCarrierSel.addEventListener('change', renderRateCost);
+
+document.getElementById('btnShowAllRates').addEventListener('click', function(){
+    ratePolSel.value = '';
+    rateCarrierSel.value = '';
+    renderRateCost();
+});
+
+/* =========================================================
+   9. Function3 —— 复制为图片
+   ========================================================= */
+document.getElementById('btnCopyRateImage').addEventListener('click', async function(){
+    const el = document.getElementById('rateCostResult');
+    if(!el || typeof html2canvas === 'undefined'){
+        alert('图片生成库未加载，请检查网络后重试');
+        return;
+    }
+
+    const btn = this;
+    const oldText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '⏳ 生成中...';
+
+    try{
+        const canvas = await html2canvas(el, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            useCORS: true,
+            logging: false
+        });
+
+        canvas.toBlob(async function(blob){
+            if(!blob){
+                alert('图片生成失败，请重试');
+                return;
+            }
+
+            if(navigator.clipboard && window.ClipboardItem){
+                try{
+                    await navigator.clipboard.write([
+                        new ClipboardItem({'image/png': blob})
+                    ]);
+                    alert('价格表图片已复制到剪贴板');
+                    return;
+                }catch(e){
+                    // 剪贴板写入失败，走下载
+                }
+            }
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'rate-cost-' + Date.now() + '.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('当前浏览器不支持直接复制图片，已改为下载 PNG 文件');
+        }, 'image/png');
+
+    }catch(e){
+        alert('生成图片失败：' + e.message);
+    }finally{
+        btn.disabled = false;
+        btn.textContent = oldText;
+    }
+});
+
+renderRateCost();
+
+});
+</script>
+</body>
+</html>
