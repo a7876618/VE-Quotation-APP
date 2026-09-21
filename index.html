@@ -146,7 +146,7 @@ button:hover{background:#1d4ed8;}
     background:#1d4ed8;
 }
 
-/* ===== 船期表样式 ===== */
+/* ===== 船期表（桌面） ===== */
 .table-wrap{
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
@@ -318,10 +318,11 @@ button:hover{background:#1d4ed8;}
     .port-check-group{ grid-template-columns: repeat(4, 1fr); }
     .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
 }
+
 @media(max-width: 700px){
     .local-grid{ grid-template-columns:1fr; }
 
-    /* ---------- Function3 手机端卡片布局 ---------- */
+    /* ========== Function3 手机端卡片 ========== */
     .rate-table{ border:none; }
     .rate-table thead{ display:none; }
     .rate-table tbody tr{
@@ -334,7 +335,6 @@ button:hover{background:#1d4ed8;}
     }
     .rate-table tbody tr:nth-child(even){background:#fff;}
     .rate-table tbody tr:hover{background:#fff;}
-
     .rate-table td{
         display:flex;
         justify-content:space-between;
@@ -346,7 +346,6 @@ button:hover{background:#1d4ed8;}
         text-align:right;
     }
     .rate-table td:last-child{ border-bottom:none; }
-
     .rate-table td::before{
         content:attr(data-label);
         font-weight:700;
@@ -356,7 +355,6 @@ button:hover{background:#1d4ed8;}
         flex-shrink:0;
         padding-top:2px;
     }
-
     .rate-table td.pol{
         background:#d9ead3;
         font-size:14px;
@@ -365,7 +363,6 @@ button:hover{background:#1d4ed8;}
         padding:10px 12px;
     }
     .rate-table td.pol::before{ content:"POL"; color:#1e293b; }
-
     .rate-table td.price{
         background:#f0f9ff;
         font-size:17px;
@@ -374,16 +371,89 @@ button:hover{background:#1d4ed8;}
         text-align:right;
     }
     .rate-table td.price::before{ color:#1e40af; }
-
     .rate-table td.remark{
         text-align:left;
         white-space:normal;
     }
-    .rate-table td.remark::before{
-        display:none;
-    }
+    .rate-table td.remark::before{ display:none; }
     .rate-table td.remark:empty{ display:none; }
+
+    /* ========== Function1 手机端卡片 ========== */
+    .sch-table{ border:none; min-width:0; }
+    .sch-table thead{ display:none; }
+    .sch-table tbody tr{
+        display:block;
+        border:1px solid #cbd5e1;
+        border-radius:8px;
+        margin-bottom:12px;
+        background:#fff;
+        overflow:hidden;
+    }
+    .sch-table tbody tr:nth-child(even){background:#fff;}
+
+    .sch-table td{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:10px;
+        border:none;
+        border-bottom:1px solid #f1f5f9;
+        padding:8px 12px;
+        text-align:right;
+        white-space:normal;
+        word-break:break-word;
+    }
+    .sch-table td:last-child{ border-bottom:none; }
+
+    .sch-table td::before{
+        content:attr(data-label);
+        font-weight:700;
+        color:#64748b;
+        font-size:12px;
+        text-align:left;
+        flex-shrink:0;
+        padding-top:2px;
+    }
+
+    /* Voyage 行做成标题条 */
+    .sch-table td.voyage-cell{
+        background:#dbeafe;
+        color:#1e3a8a;
+        font-size:14px;
+        font-weight:700;
+        padding:10px 12px;
+        border-bottom:1px solid #bfdbfe;
+    }
+    .sch-table td.voyage-cell::before{
+        content:"VOYAGE";
+        color:#1e40af;
+    }
+
+    /* ETD 行突出 */
+    .sch-table td.etd-highlight{
+        background:#eff6ff;
+        font-weight:800;
+        color:#1d4ed8;
+        font-size:16px;
+    }
+    .sch-table td.etd-highlight::before{
+        color:#1e40af;
+    }
+
+    /* 操作行 */
+    .sch-table td.action-cell{
+        background:#f8fafc;
+        justify-content:center;
+        padding:10px;
+    }
+    .sch-table td.action-cell::before{ display:none; }
+    .sch-table td.action-cell .btn-copy-single{
+        width:100%;
+        padding:10px;
+        font-size:14px;
+    }
 }
+
 @media(max-width: 600px){
     .port-check-group{ grid-template-columns: repeat(3, 1fr); }
     .carrier-check-group{ grid-template-columns: repeat(2, 1fr); }
@@ -897,7 +967,7 @@ async function copyText(text){
 }
 
 /* =========================================================
-   5. Function1 —— 船期表
+   5. Function1 —— 船期表（手机端卡片）
    ========================================================= */
 const polSel = document.getElementById('polSel');
 const carrierSel = document.getElementById('carrierSel');
@@ -932,14 +1002,14 @@ function renderSchedule(){
         const vessel = s[0] || '/';
         const isBlank = vessel.toUpperCase().indexOf('BLANK') === 0;
         html += '<tr>' +
-                '<td>Voyage ' + (i+1) + '</td>' +
-                '<td>' + carrier + '</td>' +
-                '<td class="' + (isBlank ? 'blank' : '') + '">' + vessel + '</td>' +
-                '<td class="etd-highlight">' + s[1] + '</td>' +
-                '<td class="' + (s[2] === '/' ? 'blank' : '') + '">' + s[2] + '</td>' +
-                '<td>' + s[3] + ' DAYS</td>' +
-                '<td>' + FREE_TIME_DEFAULT + ' DAYS</td>' +
-                '<td><button class="btn-copy-single" data-index="' + i + '">📋 Copy</button></td>' +
+                '<td class="voyage-cell" data-label="Voyage">Voyage ' + (i+1) + '</td>' +
+                '<td data-label="Carrier">' + carrier + '</td>' +
+                '<td class="' + (isBlank ? 'blank' : '') + '" data-label="Vessel/Voyage">' + vessel + '</td>' +
+                '<td class="etd-highlight" data-label="ETD">' + s[1] + '</td>' +
+                '<td class="' + (s[2] === '/' ? 'blank' : '') + '" data-label="ETA">' + s[2] + '</td>' +
+                '<td data-label="Transit Time">' + s[3] + ' DAYS</td>' +
+                '<td data-label="Free Time">' + FREE_TIME_DEFAULT + ' DAYS</td>' +
+                '<td class="action-cell"><button class="btn-copy-single" data-index="' + i + '">📋 Copy</button></td>' +
                 '</tr>';
     });
 
@@ -1139,7 +1209,7 @@ document.getElementById('btnCopyG2').addEventListener('click', function(){
 });
 
 /* =========================================================
-   8. Function3 —— Rate Cost（Excel 风格表格 + 手机端卡片）
+   8. Function3 —— Rate Cost
    ========================================================= */
 const RATE_COST_DATA = [
   { pol: "QINGDAO", pod: "PUERTO CABELLO/LA GUAIRA", carrier: "CMA", price20: 10190, price40: 10190, freeTime: "21days", validity: "9.21-9.30", remark: "OF:GUARANAO/MARACAIBO/GUANTA+USD2500<br> EL GUAMACHE+USD2500/3000" },
