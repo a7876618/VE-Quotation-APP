@@ -77,9 +77,100 @@ button:hover{background:#1d4ed8;}
 .rate-table td.freetime{white-space:nowrap;color:#334155;}
 .rate-table td.validity{white-space:nowrap;color:#334155;}
 .rate-table td.remark{text-align:left;font-size:12.5px;color:#475569;line-height:1.55;white-space:normal;word-break:break-word;}
-@media(max-width: 900px){.port-check-group{grid-template-columns: repeat(4, 1fr);}.carrier-check-group{grid-template-columns: repeat(2, 1fr);}}
+
+/* =========================================================
+   Function4 —— Quick Links
+   ========================================================= */
+.links-section-title{
+    font-size:15px;
+    font-weight:700;
+    color:#1e293b;
+    margin:20px 0 12px;
+    padding-bottom:8px;
+    border-bottom:1px solid #e2e8f0;
+}
+.links-section-title:first-child{margin-top:0;}
+.links-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:12px;
+}
+.link-card{
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    background:#fff;
+    padding:14px 16px;
+    text-decoration:none;
+    color:#1e293b;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:all 0.15s;
+    cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+}
+.link-card:hover{
+    border-color:#2563eb;
+    box-shadow:0 4px 12px rgba(37,99,235,0.15);
+    transform:translateY(-1px);
+}
+.link-card .link-icon{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:#eff6ff;
+    color:#1d4ed8;
+}
+.link-card .link-info{
+    flex:1;
+    min-width:0;
+}
+.link-card .link-title{
+    font-size:14px;
+    font-weight:700;
+    color:#1e293b;
+    margin-bottom:2px;
+}
+.link-card .link-sub{
+    font-size:12px;
+    color:#64748b;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.link-card .link-arrow{
+    flex-shrink:0;
+    color:#94a3b8;
+    font-size:16px;
+}
+
+/* 船公司分组小标记 */
+.carrier-badge{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:4px;
+    margin-right:6px;
+    vertical-align:middle;
+}
+.carrier-badge.cma{background:#e0f2fe;color:#0369a1;}
+.carrier-badge.msk{background:#dbeafe;color:#1e40af;}
+.carrier-badge.zim{background:#fee2e2;color:#b91c1c;}
+.carrier-badge.msc{background:#fef3c7;color:#b45309;}
+
+@media(max-width: 900px){
+    .port-check-group{grid-template-columns: repeat(4, 1fr);}
+    .carrier-check-group{grid-template-columns: repeat(2, 1fr);}
+}
 @media(max-width: 700px){
     .local-grid{grid-template-columns:1fr;}
+    .links-grid{grid-template-columns: 1fr;}
     .rate-table{border:none;}
     .rate-table thead{display:none;}
     .rate-table tbody tr{display:block;border:1px solid #c8d6c4;border-radius:8px;margin-bottom:12px;background:#fff;overflow:hidden;}
@@ -127,6 +218,7 @@ button:hover{background:#1d4ed8;}
         <button class="tab-btn active" data-tab="panel1">Function1 | Schedule & Quotation</button>
         <button class="tab-btn" data-tab="panel2">Function2 | General Quotation</button>
         <button class="tab-btn" data-tab="panel3">Function3 | Rate Cost</button>
+        <button class="tab-btn" data-tab="panel4">Function4 | Quick Links</button>
     </div>
 </div>
 
@@ -302,6 +394,92 @@ button:hover{background:#1d4ed8;}
     </div>
 </div>
 
+<div id="panel4" class="panel">
+    <div class="box">
+        <h3>Carrier Quick Links</h3>
+
+        <div class="links-section-title"><span class="carrier-badge cma">CMA CGM</span> 常用工具</div>
+        <div class="links-grid">
+            <a class="link-card" href="https://www.cma-cgm.com.cn/LaraToolkit/BLInquery" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">📄</div>
+                <div class="link-info">
+                    <div class="link-title">BL Inquiry</div>
+                    <div class="link-sub">提单信息查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+            <a class="link-card" href="https://www.cma-cgm.com.cn/LaraToolkit/BookingInquery" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">📋</div>
+                <div class="link-info">
+                    <div class="link-title">Booking Inquiry</div>
+                    <div class="link-sub">订舱查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+        </div>
+
+        <div class="links-section-title"><span class="carrier-badge msk">MSK</span> 货物跟踪</div>
+        <div class="links-grid">
+            <a class="link-card" href="https://www.maersk.com/tracking/" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🔍</div>
+                <div class="link-info">
+                    <div class="link-title">Track & Trace</div>
+                    <div class="link-sub">提单号 / 箱号查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+            <a class="link-card" href="https://www.maersk.com.cn/tracking" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🇨🇳</div>
+                <div class="link-info">
+                    <div class="link-title">Track & Trace (中文站)</div>
+                    <div class="link-sub">提单号 / 箱号查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+        </div>
+
+        <div class="links-section-title"><span class="carrier-badge zim">ZIM</span> 货物跟踪</div>
+        <div class="links-grid">
+            <a class="link-card" href="https://www.zim.com/tools/track-a-shipment" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🔍</div>
+                <div class="link-info">
+                    <div class="link-title">Track a Shipment</div>
+                    <div class="link-sub">提单号 / 订舱号 / 箱号查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+            <a class="link-card" href="https://www.zimchina.com/" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🇨🇳</div>
+                <div class="link-info">
+                    <div class="link-title">ZIM China</div>
+                    <div class="link-sub">中国区官网（中文）</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+        </div>
+
+        <div class="links-section-title"><span class="carrier-badge msc">MSC</span> 货物跟踪</div>
+        <div class="links-grid">
+            <a class="link-card" href="https://www.msc.com/track-a-shipment" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🔍</div>
+                <div class="link-info">
+                    <div class="link-title">Track a Shipment</div>
+                    <div class="link-sub">提单号 / 箱号查询</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+            <a class="link-card" href="https://www.msc.com/zh/chn" target="_blank" rel="noopener noreferrer">
+                <div class="link-icon">🇨🇳</div>
+                <div class="link-info">
+                    <div class="link-title">MSC China</div>
+                    <div class="link-sub">中国区官网（中文）</div>
+                </div>
+                <div class="link-arrow">↗</div>
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function(){
 
@@ -388,15 +566,11 @@ async function copyText(text){
             document.execCommand('copy');
             document.body.removeChild(ta);
         }
-        // 复制成功不弹窗
     }catch(e){
         alert("Copy failed, please copy manually:\n\n" + text);
     }
 }
 
-/* =========================================================
-   正式推广信模板（无分隔线，末尾 Best regards,）
-   ========================================================= */
 function buildPromotionEmail(quotation){
     const lines = [];
     lines.push('Dear Sir/Madam,');
@@ -424,9 +598,6 @@ function buildPromotionEmail(quotation){
     return lines.join('\n');
 }
 
-/* =========================================================
-   5. Function1 —— 船期表
-   ========================================================= */
 const polSel = document.getElementById('polSel');
 const carrierSel = document.getElementById('carrierSel');
 
@@ -464,7 +635,6 @@ function renderSchedule(){
         });
     });
 
-    // 填充发货计划下拉框（ETD 放在最前）
     const sel = document.getElementById('emailVoyageF1');
     if(sel){
         sel.innerHTML = '';
